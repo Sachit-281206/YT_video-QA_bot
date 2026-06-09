@@ -22,10 +22,24 @@ class VectorStoreService:
             for i in range(len(chunks))
         ]
 
+        documents = [
+            chunk["text"]
+            for chunk in chunks
+        ]
+
+        metadatas = [
+            {
+                "start_time": chunk["start_time"],
+                "end_time": chunk["end_time"]
+            }
+            for chunk in chunks
+        ]
+
         self.collection.add(
             ids=ids,
-            documents=chunks,
-            embeddings=embeddings
+            documents=documents,
+            embeddings=embeddings,
+            metadatas=metadatas
         )
 
     def search(
@@ -36,7 +50,11 @@ class VectorStoreService:
         return self.collection.query(
             query_embeddings=[query_embedding],
             n_results=n_results,
-            include=["documents", "distances"]
+            include=[
+                "documents",
+                "distances",
+                "metadatas"
+            ]
         )
 
     def count(self):

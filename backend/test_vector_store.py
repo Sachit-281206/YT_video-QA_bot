@@ -1,5 +1,5 @@
 from services.transcript_service import TranscriptService
-from services.chunk_service import ChunkService
+from services.chunk_metadata_service import ChunkMetadataService
 from services.embedding_service import EmbeddingService
 from services.vector_store_service import VectorStoreService
 
@@ -10,19 +10,19 @@ transcript = TranscriptService.get_transcript(
     youtube_url
 )
 
-full_text = " ".join(
-    snippet.text
-    for snippet in transcript
-)
-
-chunks = ChunkService.create_chunks(
-    full_text
+chunks = (
+    ChunkMetadataService
+    .create_chunks_with_metadata(
+        transcript
+    )
 )
 
 embedding_service = EmbeddingService()
 
 embeddings = [
-    embedding_service.generate_embedding(chunk).tolist()
+    embedding_service.generate_embedding(
+        chunk["text"]
+    ).tolist()
     for chunk in chunks
 ]
 
