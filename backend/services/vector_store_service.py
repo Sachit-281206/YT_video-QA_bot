@@ -31,13 +31,12 @@ class VectorStoreService:
     def search(
         self,
         query_embedding,
-        n_results=3
+        n_results=5
     ):
         return self.collection.query(
-            query_embeddings=[
-                query_embedding
-            ],
-            n_results=n_results
+            query_embeddings=[query_embedding],
+            n_results=n_results,
+            include=["documents", "distances"]
         )
 
     def count(self):
