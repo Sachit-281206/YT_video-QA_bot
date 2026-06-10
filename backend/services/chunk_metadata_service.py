@@ -3,6 +3,7 @@ class ChunkMetadataService:
     @staticmethod
     def create_chunks_with_metadata(
         transcript,
+        video_id,
         snippets_per_chunk=20
     ):
         chunks = []
@@ -32,6 +33,7 @@ class ChunkMetadataService:
             chunks.append(
                 {
                     "text": text,
+                    "video_id": video_id,
                     "start_time": start_time,
                     "end_time": end_time
                 }

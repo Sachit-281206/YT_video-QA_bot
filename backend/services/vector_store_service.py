@@ -28,7 +28,8 @@ class VectorStoreService:
         ]
 
         metadatas = [
-            {
+            {   
+                "video_id": chunk["video_id"],
                 "start_time": chunk["start_time"],
                 "end_time": chunk["end_time"]
             }
@@ -45,11 +46,15 @@ class VectorStoreService:
     def search(
         self,
         query_embedding,
+        video_id,
         n_results=5
     ):
         return self.collection.query(
             query_embeddings=[query_embedding],
             n_results=n_results,
+            where={
+                "video_id": video_id
+            },
             include=[
                 "documents",
                 "distances",
