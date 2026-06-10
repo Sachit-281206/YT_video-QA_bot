@@ -14,9 +14,11 @@ from utils.youtube_utils import (
     extract_video_id
 )
 
-app = FastAPI(
-    title="YouTube QA Bot API"
-)
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy"
+    }
 
 embedding_service = EmbeddingService()
 vector_store = VectorStoreService()
