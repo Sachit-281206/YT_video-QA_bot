@@ -127,16 +127,23 @@ def ask_question(
 
     for metadata in metadatas:
 
-        start_time = seconds_to_mmss(
-            metadata["start_time"]
-        )
-
-        end_time = seconds_to_mmss(
-            metadata["end_time"]
-        )
-
         sources.append(
-            f"{start_time} - {end_time}"
+            {
+                "start_seconds":
+                    int(
+                        metadata["start_time"]
+                    ),
+
+                "start_time":
+                    seconds_to_mmss(
+                        metadata["start_time"]
+                    ),
+
+                "end_time":
+                    seconds_to_mmss(
+                        metadata["end_time"]
+                    )
+            }
         )
 
     return {

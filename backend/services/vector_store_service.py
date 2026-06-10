@@ -18,10 +18,10 @@ class VectorStoreService:
         embeddings
     ):
         ids = [
-            f"chunk_{i}"
-            for i in range(len(chunks))
+            f"{chunk['video_id']}_chunk_{i}"
+            for i, chunk in enumerate(chunks)
         ]
-
+        
         documents = [
             chunk["text"]
             for chunk in chunks
