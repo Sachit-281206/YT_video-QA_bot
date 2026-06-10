@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 
 load_dotenv()
 
@@ -8,12 +8,11 @@ load_dotenv()
 class QAService:
 
     def __init__(self):
-        genai.configure(
-            api_key=os.getenv("GEMINI_API_KEY")
-        )
 
-        self.model = genai.GenerativeModel(
-            "gemini-2.5-flash"
+        self.client = genai.Client(
+            api_key=os.getenv(
+                "GEMINI_API_KEY"
+            )
         )
 
     def generate_answer(
@@ -21,7 +20,10 @@ class QAService:
         question,
         context_chunks
     ):
-        context = "\n\n".join(context_chunks)
+
+        context = "\n\n".join(
+            context_chunks
+        )
 
         prompt = f"""
 You are a helpful assistant.
@@ -29,7 +31,7 @@ You are a helpful assistant.
 Use the context to answer the question.
 
 You may infer reasonable conclusions from the context,
-but do not invent facts not supported by the context."
+but do not invent facts not supported by the context.
 
 Context:
 {context}
@@ -38,8 +40,12 @@ Question:
 {question}
 """
 
-        response = self.model.generate_content(
-            prompt
+        response = (
+            self.client.models
+            .generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
         )
 
         return response.text

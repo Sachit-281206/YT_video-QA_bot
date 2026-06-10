@@ -1,12 +1,13 @@
 from fastapi import FastAPI
-from models.request_models import VideoRequest
-
+from models.request_models import (
+    VideoRequest,
+    QuestionRequest
+)
 from services.transcript_service import TranscriptService
 from services.chunk_metadata_service import ChunkMetadataService
 from services.embedding_service import EmbeddingService
 from services.vector_store_service import VectorStoreService
 
-from models.request_models import QuestionRequest
 from services.qa_service import QAService
 from utils.time_utils import seconds_to_mmss
 
@@ -14,15 +15,21 @@ from utils.youtube_utils import (
     extract_video_id
 )
 
+app = FastAPI(
+    title="YouTube QA Bot API",
+    description="Ask questions about YouTube videos using RAG",
+    version="1.0.0"
+)
+
+embedding_service = EmbeddingService()
+vector_store = VectorStoreService()
+qa_service = QAService()
+
 @app.get("/health")
 def health():
     return {
         "status": "healthy"
     }
-
-embedding_service = EmbeddingService()
-vector_store = VectorStoreService()
-qa_service = QAService()
 
 @app.get("/")
 def root():
