@@ -8,3 +8,8 @@ class VideoRequest(BaseModel):
 class QuestionRequest(BaseModel):
     question: str
     video_id: str
+    
+class SummaryRequest(
+    BaseModel
+):
+    video_id: str

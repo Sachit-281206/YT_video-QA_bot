@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from models.request_models import (
     VideoRequest,
-    QuestionRequest
+    QuestionRequest,
+    SummaryRequest
 )
 from services.transcript_service import TranscriptService
 from services.chunk_metadata_service import ChunkMetadataService
@@ -15,6 +16,7 @@ from utils.time_utils import seconds_to_mmss
 from utils.youtube_utils import (
     extract_video_id
 )
+from services.summary_service import SummaryService
 
 app = FastAPI(
     title="YouTube QA Bot API",
@@ -25,6 +27,7 @@ app = FastAPI(
 embedding_service = EmbeddingService()
 vector_store = VectorStoreService()
 qa_service = QAService()
+summary_service = SummaryService()
 
 @app.get("/health")
 def health():
@@ -139,4 +142,31 @@ def ask_question(
     return {
         "answer": answer,
         "sources": sources
+    }
+    
+@app.post("/summary")
+def generate_summary(
+    request: SummaryRequest
+):
+
+    results = (
+        vector_store
+        .get_video_chunks(
+            request.video_id
+        )
+    )
+
+    chunks = (
+        results["documents"]
+    )
+
+    summary = (
+        summary_service
+        .summarize_video(
+            chunks
+        )
+    )
+
+    return {
+        "summary": summary
     }

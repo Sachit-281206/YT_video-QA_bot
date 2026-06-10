@@ -133,9 +133,10 @@ if "video_id" in st.session_state:
 # Tabs
 # ----------------------------------
 
-tab1, tab2 = st.tabs(
+tab1, tab2, tab3 = st.tabs(
     [
         "❓ Ask Questions",
+        "📝 Summary",
         "📊 Video Info"
     ]
 )
@@ -222,6 +223,59 @@ with tab1:
                 st.error(
                     f"Error: {str(e)}"
                 )
+    st.divider()
+
+    st.subheader(
+        "📝 Video Summary"
+    )
+
+    if st.button(
+        "Generate Summary",
+        use_container_width=True
+    ):
+
+        if (
+            "video_id"
+            not in st.session_state
+        ):
+
+            st.error(
+                "Please process a video first."
+            )
+
+        else:
+
+            try:
+
+                with st.spinner(
+                    "Generating summary..."
+                ):
+
+                    response = requests.post(
+                        f"{BACKEND_URL}/summary",
+                        json={
+                            "video_id":
+                                st.session_state[
+                                    "video_id"
+                                ]
+                        }
+                    )
+
+                    data = response.json()
+
+                st.subheader(
+                    "📄 Summary"
+                )
+
+                st.write(
+                    data["summary"]
+                )
+
+            except Exception as e:
+
+                st.error(
+                    f"Error: {str(e)}"
+                )
 
 # ----------------------------------
 # Video Info Tab
@@ -258,3 +312,29 @@ with tab2:
         st.warning(
             "Process a video first."
         )
+        
+    st.subheader(
+        "📝 Video Summary"
+    )
+
+    if st.button(
+        "Generate Summary"
+    ):
+
+        response = requests.post(
+            f"{BACKEND_URL}/summary",
+            json={
+                "video_id":
+                    st.session_state[
+                        "video_id"
+                    ]
+            }
+        )
+
+        data = response.json()
+
+        st.write(
+            data["summary"]
+        )
+        
+        

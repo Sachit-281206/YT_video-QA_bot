@@ -64,3 +64,20 @@ class VectorStoreService:
 
     def count(self):
         return self.collection.count()
+    
+    def get_video_chunks(
+        self,
+        video_id
+    ):
+
+        results = self.collection.get(
+            where={
+                "video_id": video_id
+            },
+            include=[
+                "documents",
+                "metadatas"
+            ]
+        )
+
+        return results
