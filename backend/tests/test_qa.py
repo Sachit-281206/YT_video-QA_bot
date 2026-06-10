@@ -1,6 +1,7 @@
 from services.embedding_service import EmbeddingService
 from services.vector_store_service import VectorStoreService
-from services.qa_service import QAService
+# from services.qa_service_gemini import QAService
+from services.qa_service_ollama import QAService
 from utils.time_utils import seconds_to_mmss
 
 
