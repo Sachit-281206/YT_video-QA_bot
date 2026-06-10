@@ -9,6 +9,9 @@ st.set_page_config(
     layout="wide"
 )
 
+if "videos" not in st.session_state:
+    st.session_state["videos"] = []
+
 # ----------------------------------
 # Header
 # ----------------------------------
@@ -67,12 +70,31 @@ if st.button(
             ] = data["video_id"]
 
             st.session_state[
+                "selected_video"
+            ] = data["video_id"]
+
+            st.session_state[
                 "chunks_stored"
             ] = data["chunks_stored"]
 
             st.session_state[
                 "youtube_url"
             ] = youtube_url
+
+            video_entry = {
+                "video_id": data["video_id"],
+                "title": data["title"],
+                "youtube_url": youtube_url,
+                "chunks_stored": data["chunks_stored"]
+            }
+
+            if not any(
+                v["video_id"] == data["video_id"]
+                for v in st.session_state["videos"]
+            ):
+                st.session_state["videos"].append(
+                    video_entry
+                )
 
             st.success(
                 data["message"]
@@ -83,6 +105,40 @@ if st.button(
             st.error(
                 f"Error: {str(e)}"
             )
+            
+# ----------------------------------
+# Processed Videos
+# ----------------------------------
+
+if (
+    "videos" in st.session_state
+    and st.session_state["videos"]
+):
+
+    st.subheader(
+        "📚 Processed Videos"
+    )
+
+    video_map = {
+        video["title"]:
+        video["video_id"]
+
+        for video in
+        st.session_state["videos"]
+    }
+
+    selected_title = st.selectbox(
+        "Select Video",
+        options=list(
+            video_map.keys()
+        )
+    )
+
+    st.session_state[
+        "selected_video"
+    ] = video_map[
+        selected_title
+    ]
 
 # ----------------------------------
 # Video Information
@@ -193,7 +249,7 @@ with tab1:
 
                             "video_id":
                                 st.session_state[
-                                    "video_id"
+                                    "selected_video"
                                 ]
                         }
                     )
@@ -216,7 +272,7 @@ with tab1:
 
                     timestamp_url = (
                         f"https://youtu.be/"
-                        f"{st.session_state['video_id']}"
+                        f"{st.session_state['selected_video']}"
                         f"?t={source['start_seconds']}"
                     )
 
@@ -271,7 +327,7 @@ with tab2:
                     json={
                         "video_id":
                             st.session_state[
-                                "video_id"
+                                "selected_video"
                             ]
                     }
                 )

@@ -14,7 +14,8 @@ from services.qa_service_ollama import QAService
 from utils.time_utils import seconds_to_mmss
 
 from utils.youtube_utils import (
-    extract_video_id
+    extract_video_id,
+    get_video_title
 )
 from services.summary_service import SummaryService
 
@@ -47,6 +48,9 @@ def process_video(
 ):
 
     video_id = extract_video_id(
+        request.youtube_url
+    )
+    title = get_video_title(
         request.youtube_url
     )
 
@@ -84,7 +88,10 @@ def process_video(
 
         "video_id":
             video_id,
-
+            
+        "title":
+            title,
+            
         "chunks_stored":
             len(chunks)
     }
@@ -177,3 +184,4 @@ def generate_summary(
     return {
         "summary": summary
     }
+    

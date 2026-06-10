@@ -26,3 +26,26 @@ def extract_video_id(
         )["v"][0]
 
     return None
+
+import yt_dlp
+
+
+def get_video_title(
+    youtube_url: str
+):
+
+    ydl_opts = {
+        "quiet": True,
+        "skip_download": True
+    }
+
+    with yt_dlp.YoutubeDL(
+        ydl_opts
+    ) as ydl:
+
+        info = ydl.extract_info(
+            youtube_url,
+            download=False
+        )
+
+        return info["title"]
